@@ -29,7 +29,7 @@ app.use(function(req, res, next) {
     console.log(req.method + ': new request');
 
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type', 'X-Requested-With');
 
     if (req.method === 'OPTIONS') {
@@ -45,8 +45,13 @@ app.use(function(req, res, next) {
                 const dM = req.query.dM;
                 const dR = req.query.dR;
 
-                if(!kdo || !dD || !dM || !dR) {
-                    return;
+                if(dD > 31 || dD < 1 ||
+                    dM > 12 || dM < 1 ||
+                    !dR ||
+                    !kdo
+                    )
+                {
+                    throw new TypeError("Invalid arguments", kdo, dD, dM, dR);
                 }
 
                 getVysledekKontroly(kdo, dD, dM, dR, function(Vysledek) {
@@ -56,6 +61,11 @@ app.use(function(req, res, next) {
             }).then(body => {
                 console.log('GET: response sent');
                 res.send(body);
+            }).catch(error => {
+                console.error(error);
+                console.log('GET: error 400 sent');
+                res.statusCode = 400;
+                res.send();
             });
         }
     } else {
