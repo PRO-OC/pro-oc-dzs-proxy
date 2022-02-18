@@ -22,6 +22,7 @@ async function getVysledekKontroly(kdo, dD, dM, dR, onSuccess) {
         return anchor.innerHTML;
     });
     onSuccess(Vysledek);
+    await browser.close();
 }
 
 app.use(function(req, res, next) {
