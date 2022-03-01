@@ -1,6 +1,16 @@
 var express = require('express');
 const puppeteer = require('puppeteer');
 var app = express();
+var fs = require('fs');
+var CryptoJS = require("crypto-js");
+
+var encryptionPass = fs.readFileSync('encryption/key.txt', 'utf8'); 
+
+function encryptBody(body, key) {
+    let encJson = CryptoJS.AES.encrypt(JSON.stringify( { body }), key).toString();
+    let encData = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encJson));
+    return encData;
+}
 
 async function getVysledekKontroly(kdo, dD, dM, dR, onSuccess) {
 
@@ -61,7 +71,8 @@ app.use(function(req, res, next) {
                 });
             }).then(body => {
                 console.log('GET: response sent');
-                res.send(body);
+                var bodyEncrypted = encryptBody(body, encryptionPass);
+                res.send(bodyEncrypted);
             }).catch(error => {
                 console.error(error);
                 console.log('GET: error 400 sent');
