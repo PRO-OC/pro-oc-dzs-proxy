@@ -11,17 +11,18 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ldrahnik/pro-oc-dzs-cors-proxy.git"
+    "url": "git+https://github.com/ldrahnik/pro-oc-dzs-proxy.git"
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ldrahnik/pro-oc-dzs-cors-proxy/issues"
+    "url": "https://github.com/ldrahnik/pro-oc-dzs-proxy/issues"
   },
-  "homepage": "https://github.com/ldrahnik/pro-oc-dzs-cors-proxy#readme",
+  "homepage": "https://github.com/ldrahnik/pro-oc-dzs-proxy#readme",
   "engines": {
     "node": "14.x"
   }

@@ -1,10 +1,9 @@
 var express = require('express');
 const puppeteer = require('puppeteer');
 var app = express();
-var fs = require('fs');
 var CryptoJS = require("crypto-js");
 
-var encryptionPass = fs.readFileSync('encryption/key.txt', 'utf8'); 
+var encryptKey = process.env.ENCRYPT_KEY;
 
 function encryptBody(body, key) {
     let encJson = CryptoJS.AES.encrypt(JSON.stringify( { body }), key).toString();
@@ -14,7 +13,13 @@ function encryptBody(body, key) {
 
 async function getVysledekKontroly(kdo, dD, dM, dR, onSuccess) {
 
-    const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox','--disable-setuid-sandbox'] });
+    const browser = await puppeteer.launch({ headless: true, args: [
+        "--disable-gpu",
+        "--disable-dev-shm-usage",
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+    ]});
+    
     const page = await browser.newPage();
     await page.goto('http://registr.dzs.cz/dotaz.nsf/');
     await page.waitForSelector('input[type="button"]');
@@ -71,7 +76,7 @@ app.use(function(req, res, next) {
                 });
             }).then(body => {
                 console.log('GET: response sent');
-                var bodyEncrypted = encryptBody(body, encryptionPass);
+                var bodyEncrypted = encryptBody(body, encryptKey);
                 res.send(bodyEncrypted);
             }).catch(error => {
                 console.error(error);
